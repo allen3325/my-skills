@@ -131,11 +131,38 @@ Keep all professional and technical terms in English — do NOT translate them t
 - Keep `~`, `\,`, spacing commands as they are
 - If a sentence mixes English names with translatable text, translate only the non-name parts
 
+### Parallel Translation with Subagents
+
+When the paper has **multiple .tex files** (e.g., separate files for introduction, method, evaluation, appendix, etc.), launch multiple subagents to translate them **in parallel** for efficiency:
+
+1. **Identify independent .tex files**: After analyzing the project structure in Step 2, determine which `.tex` files can be translated independently (most content files are independent of each other).
+2. **Prepare shared context**: Before launching subagents, compile the following shared context that every subagent needs:
+   - The full **Translation Rules** section above (TRANSLATE / DO NOT TRANSLATE / TECHNICAL TERMS / STYLE)
+   - The output directory path (`paper_zh-tw/`)
+   - Any project-specific custom commands or macros from the preamble that affect text rendering
+3. **Launch subagents in parallel**: Use `runSubagent` to create one subagent per .tex file (or per group of small files). Each subagent's prompt must include:
+   - The complete translation rules (copy the rules into the prompt — subagents are stateless)
+   - The specific .tex file path(s) to translate
+   - The output path to write the translated file to
+   - Instruction to preserve LaTeX structure exactly and only translate content
+4. **Parallelism guidelines**:
+   - If there are **2+ independent .tex files**, use parallel subagents (one per file or per logical group)
+   - If there is only **1 .tex file**, translate it directly without subagents (or split by section if the file is very large — see below)
+   - Launch all subagents simultaneously — do NOT wait for one to finish before starting the next
+5. **Large single-file papers**: If the paper is a single large .tex file (>500 lines), you may split it into logical sections (e.g., by `\section`) and assign each section to a separate subagent. In this case:
+   - Read the file and identify section boundaries
+   - Assign each section range to a subagent, providing the line range and surrounding context
+   - After all subagents return, reassemble the sections into the final translated file in the correct order
+6. **Post-merge verification**: After all subagents complete, verify that:
+   - All files were written successfully
+   - No duplicate or missing content at section boundaries (for split single-file translations)
+   - Technical term handling is consistent across files (terms should remain in English everywhere)
+
 ### Translation Process Per File
 
-For each `.tex` file:
+For each `.tex` file (whether translated directly or by a subagent):
 
-1. Read the entire file content using `view`
+1. Read the entire file content
 2. Translate following the rules above — work section by section for long files
 3. Write the translated content to `paper_zh-tw/<same_relative_path>`
 4. After writing, briefly verify the output makes sense
