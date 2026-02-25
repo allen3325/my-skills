@@ -118,10 +118,11 @@ These rules are critical — follow them precisely:
 - **Package names in `\usepackage{}`**
 
 #### TECHNICAL TERMS HANDLING:
-Translate technical terms to Traditional Chinese with the English original in parentheses on FIRST occurrence only:
-- "attention mechanism" → 「注意力機制（Attention Mechanism）」 (first time)
-- subsequent occurrences → 「注意力機制」 (no parenthetical)
-- Very well-known abbreviations like CNN, RNN, GPU, API can stay in English
+Keep all professional and technical terms in English — do NOT translate them to Chinese:
+- "attention mechanism" → 保持 "attention mechanism" 不翻譯
+- "transformer", "encoder", "decoder", "embedding", "fine-tuning", "gradient descent" etc. → 保持英文原文
+- Abbreviations like CNN, RNN, GPU, API, LLM, MoE, KV cache etc. → 保持英文
+- Domain-specific terminology (e.g., "throughput", "latency", "inference", "prefill", "token") → 保持英文
 
 #### TRANSLATION STYLE:
 - Use formal academic Traditional Chinese (台灣學術用語)
